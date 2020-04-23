@@ -5,14 +5,22 @@ import NavBar from "./components/NavBar";
 import SideBar from "./components/SideBar";
 import GameAreaClass from "./components/GameAreaClass";
 
+const ENHARMONIC = {
+  ab: "g#",
+  bb: "a#",
+  db: "c#",
+  eb: "d#",
+  gb: "f#",
+};
+
 class App extends React.Component {
-  state = { currentScore: 0, key: 1 };
+  state = { currentScore: 0, key: 1, leftHanded: false };
 
   onNoteSubmit = (note, rNote, score) => {
     // check note and rNote match, if true increment score
     //this.incrementScore();
     //this.incrementKey();
-    this.CheckAnswer(note, rNote);
+    this.CheckAnswer(note.toLowerCase(), rNote);
   };
 
   CheckAnswer = (guess, note) => {
@@ -20,12 +28,11 @@ class App extends React.Component {
     const myRe = /[abcdefg#]{1,2}/;
     const noteOnly = myRe.exec(note);
 
-    if (guess.toLowerCase() === noteOnly[0]) {
+    if (guess === noteOnly[0] || ENHARMONIC[guess] === noteOnly[0]) {
       this.incrementScore();
     } else {
       this.decrementScore();
     }
-
     this.incrementKey();
   };
 
@@ -47,6 +54,12 @@ class App extends React.Component {
     });
   }
 
+  leftHandedChanged = (checkbox) => {
+    this.setState((state) => {
+      return { leftHanded: checkbox.checked };
+    });
+  };
+
   render() {
     return (
       <div className="container">
@@ -54,10 +67,14 @@ class App extends React.Component {
         <NavBar />
 
         <div className="row mt-4">
-          <SideBar gamename="Guess the note" />
+          <SideBar
+            gamename="Guess the note"
+            leftHandedChanged={this.leftHandedChanged}
+          />
 
           <GameAreaClass
             onSubmit={this.onNoteSubmit}
+            leftHanded={this.state.leftHanded}
             key={this.state.key}
           ></GameAreaClass>
           <div className="row col-4 pt-5">

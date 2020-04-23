@@ -1,6 +1,6 @@
 This react app is a guitar teaching game.
 
-Produced with the excellent frettable [library](https://github.com/txels/fretboard/) created by Carles Barrobés
+Produced with the excellent [fretboards library](https://github.com/txels/fretboards) created by Carles Barrobés
 
 This app currently has 1 game : Guess the note.
 

@@ -23,7 +23,13 @@ const SideBar = (props) => {
       </div>
 
       <div className="custom-control custom-checkbox">
-        <input type="checkbox" className="custom-control-input" id="natural" />
+        <input
+          type="checkbox"
+          className="custom-control-input"
+          id="natural"
+          checked={props.naturalNote}
+          onChange={(e) => props.naturalNoteChanged(e.target)}
+        />
         <label className="custom-control-label" htmlFor="natural">
           Natural Notes Only
         </label>

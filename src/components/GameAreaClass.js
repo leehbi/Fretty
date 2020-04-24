@@ -1,7 +1,7 @@
 import React from "react";
 import { Fretboard, Tunings } from "fretboards";
 
-const GenerateFret = (leftHanded) => {
+const GenerateFret = (leftHanded, naturalNote) => {
   const config = {
     frets: 12, // Number of frets to display
     startFret: 0, // Initial fret
@@ -24,7 +24,17 @@ const GenerateFret = (leftHanded) => {
 
   let noteList = notes.split(" ");
 
-  let randomNote = noteList[Math.floor(Math.random() * noteList.length)];
+  //Set regex to match #
+  const re = /^((?!#).)*$/;
+  //Apply to noteList to filter out sharps
+  const naturalNotes = noteList.filter((n) => n.match(re));
+
+  let randomNote = "";
+  if (naturalNote) {
+    randomNote = naturalNotes[Math.floor(Math.random() * naturalNotes.length)];
+  } else {
+    randomNote = noteList[Math.floor(Math.random() * noteList.length)];
+  }
 
   let board = Fretboard(config);
   board.draw(randomNote);
@@ -39,7 +49,10 @@ class GameAreaClass extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.leftHanded !== this.props.leftHanded) {
+    if (
+      prevProps.leftHanded !== this.props.leftHanded ||
+      prevProps.naturalNote !== this.props.naturalNote
+    ) {
       const fretboard = document.querySelector(".fretboard");
       fretboard.remove();
       this.drawFretboard();
@@ -52,7 +65,7 @@ class GameAreaClass extends React.Component {
   };
 
   drawFretboard() {
-    const ranNote = GenerateFret(this.props.leftHanded);
+    const ranNote = GenerateFret(this.props.leftHanded, this.props.naturalNote);
     this.setState({ rNote: ranNote });
     this.nameInput.focus();
   }

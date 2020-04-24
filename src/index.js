@@ -14,7 +14,7 @@ const ENHARMONIC = {
 };
 
 class App extends React.Component {
-  state = { currentScore: 0, key: 1, leftHanded: false };
+  state = { currentScore: 0, key: 1, leftHanded: false, naturalNote: false };
 
   onNoteSubmit = (note, rNote, score) => {
     // check note and rNote match, if true increment score
@@ -60,6 +60,12 @@ class App extends React.Component {
     });
   };
 
+  naturalNoteChanged = (checkbox) => {
+    this.setState((state) => {
+      return { naturalNote: checkbox.checked };
+    });
+  };
+
   render() {
     return (
       <div className="container">
@@ -70,11 +76,13 @@ class App extends React.Component {
           <SideBar
             gamename="Guess the note"
             leftHandedChanged={this.leftHandedChanged}
+            naturalNoteChanged={this.naturalNoteChanged}
           />
 
           <GameAreaClass
             onSubmit={this.onNoteSubmit}
             leftHanded={this.state.leftHanded}
+            naturalNote={this.state.naturalNote}
             key={this.state.key}
           ></GameAreaClass>
           <div className="row col-4 pt-5">

@@ -1,7 +1,7 @@
 import React from "react";
 import { Fretboard, Tunings } from "fretboards";
 
-const GenerateFret = () => {
+const GenerateFret = (leftHanded) => {
   const config = {
     frets: 12, // Number of frets to display
     startFret: 0, // Initial fret
@@ -9,7 +9,7 @@ const GenerateFret = () => {
     tuning: Tunings.guitar6.standard, // Tuning: default = Standard Guitar
     fretWidth: 50, // Display width of frets in pixels
     fretHeight: 20, // Display heigh of frets in pixels
-    leftHanded: false, // Show mirror image for left handed players
+    leftHanded,
     showTitle: true, // Set the note name as the title, so it will display on hover
     where: "#fret",
   };
@@ -33,16 +33,29 @@ const GenerateFret = () => {
 
 class GameAreaClass extends React.Component {
   state = { note: "", rNote: "", score: 0 };
+
   componentDidMount() {
-    const ranNote = GenerateFret();
-    this.setState({ rNote: ranNote });
-    this.nameInput.focus();
+    this.drawFretboard();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.leftHanded !== this.props.leftHanded) {
+      const fretboard = document.querySelector(".fretboard");
+      fretboard.remove();
+      this.drawFretboard();
+    }
   }
 
   onFormSubmit = (event) => {
     event.preventDefault();
     this.props.onSubmit(this.state.note, this.state.rNote, this.state.score);
   };
+
+  drawFretboard() {
+    const ranNote = GenerateFret(this.props.leftHanded);
+    this.setState({ rNote: ranNote });
+    this.nameInput.focus();
+  }
 
   render() {
     return (

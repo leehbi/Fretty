@@ -8,4 +8,6 @@ I hope to add more games in my spare time.
 
 Feel free to contribute to this app.  I'm a newbie with React so would welcome feedback.
 
+The app is deployed on [Vercel](https://fretty.now.sh/)
+
 Lee

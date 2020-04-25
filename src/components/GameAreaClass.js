@@ -1,7 +1,7 @@
 import React from "react";
 import { Fretboard, Tunings } from "fretboards";
 
-const GenerateFret = (leftHanded, naturalNote) => {
+const GenerateFret = (leftHanded, naturalNote, showTitle) => {
   const config = {
     frets: 12, // Number of frets to display
     startFret: 0, // Initial fret
@@ -10,7 +10,7 @@ const GenerateFret = (leftHanded, naturalNote) => {
     fretWidth: 50, // Display width of frets in pixels
     fretHeight: 20, // Display heigh of frets in pixels
     leftHanded,
-    showTitle: true, // Set the note name as the title, so it will display on hover
+    showTitle, // Set the note name as the title, so it will display on hover
     where: "#fret",
   };
 
@@ -51,7 +51,8 @@ class GameAreaClass extends React.Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.leftHanded !== this.props.leftHanded ||
-      prevProps.naturalNote !== this.props.naturalNote
+      prevProps.naturalNote !== this.props.naturalNote ||
+      prevProps.showTitle !== this.props.showTitle
     ) {
       const fretboard = document.querySelector(".fretboard");
       fretboard.remove();
@@ -65,7 +66,11 @@ class GameAreaClass extends React.Component {
   };
 
   drawFretboard() {
-    const ranNote = GenerateFret(this.props.leftHanded, this.props.naturalNote);
+    const ranNote = GenerateFret(
+      this.props.leftHanded,
+      this.props.naturalNote,
+      this.props.showTitle
+    );
     this.setState({ rNote: ranNote });
     this.nameInput.focus();
   }

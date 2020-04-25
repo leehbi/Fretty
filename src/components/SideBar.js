@@ -34,6 +34,18 @@ const SideBar = (props) => {
           Natural Notes Only
         </label>
       </div>
+      <div className="custom-control custom-checkbox">
+        <input
+          type="checkbox"
+          className="custom-control-input"
+          id="showtitle"
+          checked={props.showTitle}
+          onChange={(e) => props.showTitleChanged(e.target)}
+        />
+        <label className="custom-control-label" htmlFor="showtitle">
+          Get Help (Hover note name)
+        </label>
+      </div>
     </div>
   );
 };

@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.1.2",
     "faker": "^4.1.0",
-    "fretboards": "^0.2.5",
+    "fretboards": "^0.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-inlinesvg": "^1.2.0",

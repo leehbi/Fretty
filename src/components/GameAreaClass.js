@@ -1,7 +1,9 @@
 import React from "react";
 import { Fretboard, Tunings } from "fretboards";
 
-const GenerateFret = (leftHanded, naturalNote, showTitle) => {
+let board;
+
+const GenerateFret = (leftHanded, showTitle) => {
   const config = {
     frets: 12, // Number of frets to display
     startFret: 0, // Initial fret
@@ -14,6 +16,10 @@ const GenerateFret = (leftHanded, naturalNote, showTitle) => {
     where: "#fret",
   };
 
+  board = Fretboard(config);
+};
+
+const generateRandomNote = (naturalNote) => {
   const notes =
     "6:e2 6:f2 6:f#2 6:g2 6:g#2 6:a2 6:a#2 6:b2 6:c3 6:c#3 6:d3 6:d#3 6:e3 " +
     "5:a2 5:a#2 5:b2 5:c3 5:c#3 5:d3 5:d#3 5:e3 5:f3 5:f#3 5:g3 5:g#3 5:a3 " +
@@ -29,15 +35,13 @@ const GenerateFret = (leftHanded, naturalNote, showTitle) => {
   //Apply to noteList to filter out sharps
   const naturalNotes = noteList.filter((n) => n.match(re));
 
-  let randomNote = "";
+  let randomNote;
   if (naturalNote) {
     randomNote = naturalNotes[Math.floor(Math.random() * naturalNotes.length)];
   } else {
     randomNote = noteList[Math.floor(Math.random() * noteList.length)];
   }
 
-  let board = Fretboard(config);
-  board.draw(randomNote);
   return randomNote;
 };
 
@@ -45,18 +49,25 @@ class GameAreaClass extends React.Component {
   state = { note: "", rNote: "", score: 0 };
 
   componentDidMount() {
-    this.drawFretboard();
+    GenerateFret(this.props.leftHanded, this.props.showTitle);
+    this.addRandomNote();
+    this.nameInput.focus();
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.leftHanded !== this.props.leftHanded ||
-      prevProps.naturalNote !== this.props.naturalNote ||
-      prevProps.showTitle !== this.props.showTitle
-    ) {
-      const fretboard = document.querySelector(".fretboard");
-      fretboard.remove();
-      this.drawFretboard();
+    if (prevProps.leftHanded !== this.props.leftHanded) {
+      board.set("leftHanded", this.props.leftHanded);
+    }
+
+    if (prevProps.showTitle !== this.props.showTitle) {
+      board.set("showTitle", this.props.showTitle);
+    }
+
+    if (prevProps.naturalNote !== this.props.naturalNote) {
+      // Only change note if it was not natural
+      if (this.state.rNote.indexOf("#") !== -1) {
+        this.addRandomNote();
+      }
     }
   }
 
@@ -65,13 +76,10 @@ class GameAreaClass extends React.Component {
     this.props.onSubmit(this.state.note, this.state.rNote, this.state.score);
   };
 
-  drawFretboard() {
-    const ranNote = GenerateFret(
-      this.props.leftHanded,
-      this.props.naturalNote,
-      this.props.showTitle
-    );
+  addRandomNote() {
+    let ranNote = generateRandomNote(this.props.naturalNote);
     this.setState({ rNote: ranNote });
+    board.clearNotes().add(ranNote).paint();
     this.nameInput.focus();
   }
 
